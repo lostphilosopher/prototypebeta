@@ -1,33 +1,40 @@
 <?php 
-/* Basic templating capabilities for prototyping
+/* 
+ * Basic templating capabilities for prototyping
  * Based on: http://www.smashingmagazine.com/2011/10/17/getting-started-with-php-templating/
  */
 class TemplateEngine {
     
-    protected $templateDir     = 'views/';
-    protected $layoutDir       = 'views/layouts/';
-    protected $vars            = array();
+    protected $viewsDir       = 'views/';
+    protected $layoutDir      = 'views/layouts/';
+    protected $vars           = array();
 
-    public function __construct($templateDir = null) {
-        if ($templateDir !== null) {
-            // Check here whether this directory really exists
-            $this->templateDir = $templateDir;
+    // Contstructor
+    public function __construct($viewsDir = null, $layoutDir = null) {
+        if ($viewsDir !== null && $layoutDir !== null) {
+            // Check here whether these directories really exist
+            $this->viewsDir    = $viewsDir;
+            $this->layoutDir   = $layoutDir;
         }
     }
 
-    // Render the template file
+    // Render the file
     public function render($file) {
-        if (file_exists($this->templateDir.$file)) {
+        if (file_exists($this->viewsDir.$file)) {
             include $this->layoutDir.'header.php';
-            include $this->templateDir.$file;
+            include $this->viewsDir.$file;
             include $this->layoutDir.'footer.php';
         } else {
-            throw new Exception('no template file ' . $file . ' present in directory ' . $this->templateDir);
+            throw new Exception('no file ' . $file . ' present in directory ' . $this->viewsDir);
         }
     }
+
+    // Setter
     public function __set($name, $value) {
         $this->vars[$name] = $value;
     }
+
+    // Getter
     public function __get($name) {
         return $this->vars[$name];
     }
